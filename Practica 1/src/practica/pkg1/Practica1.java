@@ -5,6 +5,9 @@
  */
 package practica.pkg1;
 
+import Analizador.*;
+import GUI.Interface;
+
 /**
  *
  * @author loosc
@@ -15,7 +18,17 @@ public class Practica1 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        /*
+        LexicoPZS pzs = new LexicoPZS();
+        pzs.scannerPZS("C:\\Users\\loosc\\OneDrive\\Escritorio\\USAC\\VJUN2020\\Compi1\\[OCL1]P1_201709140\\Pruebas\\prueba.txt");
+        System.out.println(pzs);
+        System.out.println("a");
+        */
+        Interface v = new Interface();
+        v.setVisible(true); 
+                
+        
+        
     }
     
 }
