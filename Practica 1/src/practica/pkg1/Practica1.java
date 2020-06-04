@@ -19,9 +19,9 @@ public class Practica1 {
      */
     public static void main(String[] args) {
         /*
-        LexicoPZS pzs = new LexicoPZS();
-        pzs.scannerPZS("C:\\Users\\loosc\\OneDrive\\Escritorio\\USAC\\VJUN2020\\Compi1\\[OCL1]P1_201709140\\Pruebas\\prueba.txt");
-        System.out.println(pzs);
+        LexicoTRS trs = new LexicoTRS();
+        trs.scannerPZS("C:\\Users\\loosc\\OneDrive\\Escritorio\\USAC\\VJUN2020\\Compi1\\[OCL1]P1_201709140\\Pruebas\\pruebaTRS.txt");
+        System.out.println(trs);
         System.out.println("a");
         */
         Interface v = new Interface();

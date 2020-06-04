@@ -14,6 +14,7 @@ public class Token {
     private String lexema;
     private int row;
     private int column;
+    
 
     public Token() {
     }

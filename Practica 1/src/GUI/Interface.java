@@ -5,6 +5,24 @@
  */
 package GUI;
 
+import Analizador.*;
+import Objects.Pieza;
+import java.awt.Color;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  *
  * @author loosc
@@ -16,8 +34,139 @@ public class Interface extends javax.swing.JFrame {
      */
     public Interface() {
         initComponents();
+        this.setLocationRelativeTo(null);
+        datosJuego = new int [100][100];
+        datosMuestra = new int [4][100];
+        setMatrizJuego();
+        setMatrizMuestra();
+        piezas();
     }
 
+    LexicoPZS pzs = new LexicoPZS();
+    LexicoTRS trs = new LexicoTRS();
+    LinkedList<Pieza> piezas = new LinkedList<Pieza>();
+    //Variables del juego
+    private int ROW = 100;
+    private int COL = 100;
+    private int puntos=0;
+    private int juegoX;
+    private int juegoY;
+    private int posPiezas=0;
+    //Area de juego
+    JButton[][] juego;
+        //Area para mover las piezas
+    JButton[][] muestra;
+    int datosMuestra[][];
+    int datosJuego[][];
+    Pieza I = new Pieza("I");  
+    Pieza J = new Pieza("J");  
+    Pieza L = new Pieza("L");  
+    Pieza O = new Pieza("0");
+    Pieza S = new Pieza("0");
+    Pieza Z = new Pieza("0");
+    Pieza T = new Pieza("0");
+    
+    
+    public void piezas(){
+        I.llenar("1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0", "1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0", "1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0", "1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0");
+        J.llenar("0,1,0,0,0,1,0,0,0,1,0,0,1,1,0,0", "1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0","0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0", "1,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0");
+        L.llenar("1,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0", "1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0","1,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0", "1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0");
+        O.llenar("1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0", "1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0","1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0", "1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0");
+        S.llenar("0,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0", "0,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0","1,0,0,0,1,1,0,0,0,1,0,0,0,0,0,0", "1,0,0,0,1,1,0,0,0,1,0,0,0,0,0,0");
+        Z.llenar("1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0", "1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0","0,1,0,0,1,1,0,0,1,0,0,0,0,0,0,0", "0,1,0,0,1,1,0,0,1,0,0,0,0,0,0,0");
+        T.llenar("1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0", "0,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0","1,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0", "0,1,0,0,1,1,0,0,0,1,0,0,0,0,0,0");
+    }
+
+    public void setMatrizJuego() {
+        juego = new JButton[ROW][COL];
+        int x = 5;
+        int y = 5;
+
+        for (int i = 0; i < ROW; i++) {
+            for (int j = 0; j < COL; j++) {
+                juego[i][j] = new JButton();
+                //juego[i][j].setBackground(Color.lightGray);
+                //Pinto del color de fondo predeterminado
+                juego[i][j].setBackground(Color.decode("#CCFFCC"));
+                
+                juego[i][j].setBounds(y, x, 5, 5);
+                juego[i][j].setBorderPainted(false);
+                jPaneJuego.add(juego[i][j]);
+                y += 5;
+
+            }
+            x += 5;
+            y = 5;
+        }
+        
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 100; j++) {
+                datosJuego[i][j]=0;
+            }
+        }
+        
+    }
+
+    public void setMatrizMuestra() {
+        muestra = new JButton[4][COL];
+        int x = 5;
+        int y = 5;
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < COL; j++) {
+                muestra[i][j] = new JButton();
+                muestra[i][j].setBackground(Color.decode("#CCFFCC"));
+                muestra[i][j].setBounds(y, x, 5, 5);
+                muestra[i][j].setBorderPainted(false);
+                jpaneMuestra.add(muestra[i][j]);
+                y += 5;
+
+            }
+            x += 5;
+            y = 5;
+        }
+        
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 100; j++) {
+                datosMuestra[i][j]=0;
+            }
+        }
+
+    }
+
+    
+    //Los metodos de pintar si en los datos esta 0 es vacio 1 es ocupado y 2 es que esta fuera del rango
+    //0  lightGray
+    //1 blue
+    //2 #CCFFCC
+    public void pintarMuestra(){
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 100; j++) {
+                if(datosMuestra[i][j]==0){
+                    muestra[i][j].setBackground(Color.LIGHT_GRAY); 
+                }else if(datosMuestra[i][j]==1){
+                    muestra[i][j].setBackground(Color.blue); 
+                }else{
+                    muestra[i][j].setBackground(Color.decode("#CCFFCC"));
+                }
+            }
+        }
+    
+    }
+    
+    public void pintarJuego(){
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 100; j++) {
+                if(datosJuego[i][j]==0){
+                    juego[i][j].setBackground(Color.LIGHT_GRAY); 
+                }else if(datosJuego[i][j]==1){
+                    juego[i][j].setBackground(Color.blue); 
+                }else{
+                    juego[i][j].setBackground(Color.decode("#CCFFCC"));
+                }
+            }
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,25 +183,34 @@ public class Interface extends javax.swing.JFrame {
         jMenu6 = new javax.swing.JMenu();
         jMenuItem8 = new javax.swing.JMenuItem();
         jMenuItem9 = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         lblPts = new javax.swing.JLabel();
         lblNivel = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtTRS = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtPZS = new javax.swing.JTextArea();
+        jButton5 = new javax.swing.JButton();
+        jPaneJuego = new javax.swing.JPanel();
+        jpaneMuestra = new javax.swing.JPanel();
+        jButton2 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        btnTRS = new javax.swing.JMenuItem();
+        btnPZS = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        btnATRS = new javax.swing.JMenuItem();
+        btnAPZS = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
-        jMenuItem6 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuMe = new javax.swing.JMenuItem();
+        jMenuManual = new javax.swing.JMenuItem();
         jMenu7 = new javax.swing.JMenu();
         jMenuItem10 = new javax.swing.JMenuItem();
         jMenuItem11 = new javax.swing.JMenuItem();
@@ -72,14 +230,16 @@ public class Interface extends javax.swing.JFrame {
 
         jMenuItem9.setText("jMenuItem9");
 
+        jMenuItem1.setText("jMenuItem1");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Rotar");
+        jPanel1.setBackground(new java.awt.Color(204, 255, 204));
 
-        jButton2.setText("Bajar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButton1.setText("Rotar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -92,6 +252,11 @@ public class Interface extends javax.swing.JFrame {
         lblNivel.setText("---------");
 
         jButton3.setText("<<");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText(">>");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -100,90 +265,189 @@ public class Interface extends javax.swing.JFrame {
             }
         });
 
+        txtTRS.setColumns(20);
+        txtTRS.setRows(5);
+        jScrollPane1.setViewportView(txtTRS);
+
+        txtPZS.setColumns(20);
+        txtPZS.setRows(5);
+        jScrollPane2.setViewportView(txtPZS);
+
+        jButton5.setText("Bajar");
+
+        jPaneJuego.setBackground(new java.awt.Color(204, 255, 204));
+        jPaneJuego.setBorder(new javax.swing.border.MatteBorder(null));
+
+        javax.swing.GroupLayout jPaneJuegoLayout = new javax.swing.GroupLayout(jPaneJuego);
+        jPaneJuego.setLayout(jPaneJuegoLayout);
+        jPaneJuegoLayout.setHorizontalGroup(
+            jPaneJuegoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 498, Short.MAX_VALUE)
+        );
+        jPaneJuegoLayout.setVerticalGroup(
+            jPaneJuegoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 498, Short.MAX_VALUE)
+        );
+
+        jpaneMuestra.setBackground(new java.awt.Color(204, 255, 204));
+        jpaneMuestra.setBorder(new javax.swing.border.MatteBorder(null));
+
+        javax.swing.GroupLayout jpaneMuestraLayout = new javax.swing.GroupLayout(jpaneMuestra);
+        jpaneMuestra.setLayout(jpaneMuestraLayout);
+        jpaneMuestraLayout.setHorizontalGroup(
+            jpaneMuestraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jpaneMuestraLayout.setVerticalGroup(
+            jpaneMuestraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 40, Short.MAX_VALUE)
+        );
+
+        jButton2.setText("Debug");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(79, 79, 79)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
+                .addGap(26, 26, 26)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPaneJuego, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jpaneMuestra, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(659, 659, 659)
-                        .addComponent(jButton1)
-                        .addContainerGap(97, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 70, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(lblPts)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton2))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(lblNivel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(27, 27, 27)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(107, 107, 107))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lblNivel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addGap(36, 36, 36)
+                                        .addComponent(lblPts, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)))
+                                .addGap(53, 53, 53)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE))
+                                .addGap(29, 29, 29)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(33, 33, 33))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(28, 28, 28))))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblNivel))
-                .addGap(33, 33, 33)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1)
-                    .addComponent(jLabel2)
-                    .addComponent(lblPts))
-                .addContainerGap(388, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton3)
+                            .addComponent(jButton4)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNivel))
+                        .addGap(33, 33, 33)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(lblPts)
+                            .addComponent(jButton5)
+                            .addComponent(jLabel2))
+                        .addGap(40, 40, 40)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jpaneMuestra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPaneJuego, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         jMenu1.setText("Aplicacion");
 
-        jMenuItem1.setText("Abrir TRS");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        btnTRS.setText("Abrir TRS");
+        btnTRS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                btnTRSActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        jMenu1.add(btnTRS);
 
-        jMenuItem2.setText("Abrir PZS");
-        jMenu1.add(jMenuItem2);
+        btnPZS.setText("Abrir PZS");
+        btnPZS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPZSActionPerformed(evt);
+            }
+        });
+        jMenu1.add(btnPZS);
 
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Juego");
 
-        jMenuItem3.setText("Analizar TRS");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        btnATRS.setText("Analizar TRS");
+        btnATRS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                btnATRSActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem3);
+        jMenu2.add(btnATRS);
 
-        jMenuItem4.setText("Analizar PZS");
-        jMenu2.add(jMenuItem4);
+        btnAPZS.setText("Analizar PZS");
+        btnAPZS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAPZSActionPerformed(evt);
+            }
+        });
+        jMenu2.add(btnAPZS);
+
+        jMenuItem2.setText("Iniciar Juego");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem2);
 
         jMenuBar1.add(jMenu2);
 
         jMenu4.setText("Ayuda");
 
-        jMenuItem6.setText("Acerca de");
-        jMenu4.add(jMenuItem6);
+        jMenuMe.setText("Acerca de");
+        jMenuMe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuMeActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuMe);
 
-        jMenuItem5.setText("Manual");
-        jMenu4.add(jMenuItem5);
+        jMenuManual.setText("Manual");
+        jMenuManual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuManualActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuManual);
 
         jMenuBar1.add(jMenu4);
 
@@ -198,6 +462,11 @@ public class Interface extends javax.swing.JFrame {
         jMenu7.add(jMenuItem10);
 
         jMenuItem11.setText("Reporte Errores");
+        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem11ActionPerformed(evt);
+            }
+        });
         jMenu7.add(jMenuItem11);
 
         jMenuBar1.add(jMenu7);
@@ -208,7 +477,9 @@ public class Interface extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 2, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -220,25 +491,261 @@ public class Interface extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    private void btnTRSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTRSActionPerformed
+        JFileChooser fc = new JFileChooser();
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.trs", "TRS");
+        fc.setFileFilter(filtro);
+        fc.showOpenDialog(this);
+        File archivo = fc.getSelectedFile();
+        if (archivo != null) {
+            txtTRS.setText(getContent(archivo.getAbsolutePath()));
+        }
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    }//GEN-LAST:event_btnTRSActionPerformed
+
+    private void btnATRSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnATRSActionPerformed
+        //Analiza el archivo TRS
+        trs.clear();
+        trs.scannerTRS(txtTRS.getText());
+        JOptionPane.showMessageDialog(null, "Analisis TRS completo");
+    }//GEN-LAST:event_btnATRSActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        //MOVER A LA DERECHA
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
-        // TODO add your handling code here:
+        try {
+            trs.htmlToken();
+            pzs.htmlToken();
+            String webpage="C:\\Users\\loosc\\OneDrive\\Escritorio\\Practica1\\TokensPZS.html";
+            String webpage1="C:\\Users\\loosc\\OneDrive\\Escritorio\\Practica1\\TokensTRS.html";
+            Runtime.getRuntime().exec("cmd /c start "+webpage);
+            Runtime.getRuntime().exec("cmd /c start "+webpage1);
+            
+                    
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "No se pudo generar reporte de tokens");
+
+        }
+
+
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        //Roto pieza del juego
+        if(piezas.get(posPiezas).getPosicion()==3){
+            piezas.get(posPiezas).setPosicion(0);
+            datosMuestra= piezas.get(posPiezas).getArriba();
+            pintarMuestra();
+        }else if(piezas.get(posPiezas).getPosicion()==0){
+            piezas.get(posPiezas).setPosicion(1);
+            datosMuestra= piezas.get(posPiezas).getAbajo();
+            pintarMuestra();
+        }else if(piezas.get(posPiezas).getPosicion()==1){
+            piezas.get(posPiezas).setPosicion(2);
+            datosMuestra= piezas.get(posPiezas).getIzquierda();
+            pintarMuestra();
+        }else if(piezas.get(posPiezas).getPosicion()==2){
+            piezas.get(posPiezas).setPosicion(3);
+            datosMuestra= piezas.get(posPiezas).getDerecha();
+            pintarMuestra();
+        }
+            
+        
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnPZSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPZSActionPerformed
+        JFileChooser fc = new JFileChooser();
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.pzs", "PZS");
+        fc.setFileFilter(filtro);
+        fc.showOpenDialog(this);
+        File archivo = fc.getSelectedFile();
+        if (archivo != null) {
+            txtPZS.setText(getContent(archivo.getAbsolutePath()));
+        }
+
+    }//GEN-LAST:event_btnPZSActionPerformed
+
+    private void btnAPZSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAPZSActionPerformed
+        //Analizis PZS
+        pzs.clear();
+        pzs.scannerPZS(txtPZS.getText());
+        JOptionPane.showMessageDialog(null, "Analizis PZS completo");
+    }//GEN-LAST:event_btnAPZSActionPerformed
+
+    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
+        // ERRORES
+        try {
+            trs.htmlError();
+            pzs.htmlError();
+            
+            String webpage="C:\\Users\\loosc\\OneDrive\\Escritorio\\Practica1\\ErrorPZS.html";
+            String webpage1="C:\\Users\\loosc\\OneDrive\\Escritorio\\Practica1\\ErrorTRS.html";
+            Runtime.getRuntime().exec("cmd /c start "+webpage);
+            Runtime.getRuntime().exec("cmd /c start "+webpage1);
+        
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "No se pudo generar reporte de tokens");
+
+        }
+    }//GEN-LAST:event_jMenuItem11ActionPerformed
+
+    private void jMenuMeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuMeActionPerformed
+        About me = new About();
+        me.setVisible(true);
+
+    }//GEN-LAST:event_jMenuMeActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // Inicia el juego
+        
+            posPiezas=0;
+            
+            //Reinicio todo
+            
+            //Obtengo los datos de las piezas y coloco la pieza 1
+            
+            for (int i = 0; i < pzs.getTokens().size(); i++) {
+                
+                if(pzs.getTokens().get(i).getToken()==7){
+                    Pieza temp = new Pieza();
+                    if(pzs.getTokens().get(i-1).getToken()==0){//Pieza I
+                        temp = I;
+                        if(pzs.getTokens().get(i+1).getToken()==8){//derecha
+                            temp.setDir("derecha");
+                            piezas.add(temp);
+                            
+                        }else if(pzs.getTokens().get(i+1).getToken()==9){//arriba
+                            temp.setDir("arriba");
+                            piezas.add(temp);
+                            
+                        }else if(pzs.getTokens().get(i+1).getToken()==10){//abajo
+                            temp.setDir("abajo");
+                            piezas.add(temp);
+                            
+                        }else if(pzs.getTokens().get(i+1).getToken()==11){//izquierda
+                            temp.setDir("izquierda");
+                            piezas.add(temp);
+                            
+                        }
+                    }else if(pzs.getTokens().get(i-1).getToken()==1){//PIEZA J
+                        temp = J;
+                        if(pzs.getTokens().get(i+1).getToken()==8){//derecha
+                            temp.setDir("derecha");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==9){//arriba
+                            temp.setDir("arriba");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==10){//abajo
+                            temp.setDir("abajo");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==11){//izquierda
+                            temp.setDir("izquierda");
+                            piezas.add(temp);
+                        }
+                    }else if(pzs.getTokens().get(i-1).getToken()==2){//Pieza L
+                        temp = L;
+                        if(pzs.getTokens().get(i+1).getToken()==8){//derecha
+                            temp.setDir("derecha");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==9){//arriba
+                            temp.setDir("arriba");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==10){//abajo
+                            temp.setDir("abajo");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==11){//izquierda
+                            temp.setDir("izquierda");
+                            piezas.add(temp);
+                        }
+                    }else if(pzs.getTokens().get(i-1).getToken()==3){//PIEZA O
+                        temp = O;
+                        if(pzs.getTokens().get(i+1).getToken()==8){//derecha
+                            temp.setDir("derecha");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==9){//arriba
+                            temp.setDir("arriba");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==10){//abajo
+                            temp.setDir("abajo");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==11){//izquierda
+                            temp.setDir("izquierda");
+                            piezas.add(temp);
+                        }
+                    }else if(pzs.getTokens().get(i-1).getToken()==4){//PIEZA S
+                        temp = S;
+                        if(pzs.getTokens().get(i+1).getToken()==8){//derecha
+                            temp.setDir("derecha");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==9){//arriba
+                            temp.setDir("arriba");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==10){//abajo
+                            temp.setDir("abajo");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==11){//izquierda
+                            temp.setDir("izquierda");
+                            piezas.add(temp);
+                        }
+                    }else if(pzs.getTokens().get(i-1).getToken()==5){//PIEZA Z
+                        temp = Z;
+                        if(pzs.getTokens().get(i+1).getToken()==8){//derecha
+                            temp.setDir("derecha");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==9){//arriba
+                            temp.setDir("arriba");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==10){//abajo
+                            temp.setDir("abajo");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==11){//izquierda
+                            temp.setDir("izquierda");
+                            piezas.add(temp);
+                        }
+                        
+                    }else if(pzs.getTokens().get(i-1).getToken()==6){//PIEZA T
+                        temp = T;
+                        if(pzs.getTokens().get(i+1).getToken()==8){//derecha
+                            temp.setDir("derecha");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==9){//arriba
+                            temp.setDir("arriba");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==10){//abajo
+                            temp.setDir("abajo");
+                            piezas.add(temp);
+                        }else if(pzs.getTokens().get(i+1).getToken()==11){//izquierda
+                            temp.setDir("izquierda");
+                            piezas.add(temp);
+                        }
+                    }
+                    
+                }
+            }
+            
+            datosMuestra= piezas.get(posPiezas).getPieza();
+            pintarMuestra();
+        
+        JOptionPane.showMessageDialog(null, "Juego iniciado");
+            
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuManualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuManualActionPerformed
         // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuManualActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        System.out.println("DEBUG");
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // MOVER A LA IZQUIERDA
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -273,13 +780,40 @@ public class Interface extends javax.swing.JFrame {
                 new Interface().setVisible(true);
             }
         });
+
+    }
+
+    public String getContent(String direction) {
+        String cadena = "";
+        try {
+
+            FileReader entrada = new FileReader(direction);
+            int c = entrada.read();
+            while (c != -1) {
+                c = entrada.read();
+                char letra = (char) c;
+                cadena += String.valueOf(letra);
+                System.out.println(letra);
+            }
+            return cadena;
+
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return cadena;
+        }
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem btnAPZS;
+    private javax.swing.JMenuItem btnATRS;
+    private javax.swing.JMenuItem btnPZS;
+    private javax.swing.JMenuItem btnTRS;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -295,15 +829,19 @@ public class Interface extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JMenuItem jMenuManual;
+    private javax.swing.JMenuItem jMenuMe;
+    private javax.swing.JPanel jPaneJuego;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JPanel jpaneMuestra;
     private javax.swing.JLabel lblNivel;
     private javax.swing.JLabel lblPts;
+    private javax.swing.JTextArea txtPZS;
+    private javax.swing.JTextArea txtTRS;
     // End of variables declaration//GEN-END:variables
 }
