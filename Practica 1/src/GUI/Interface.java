@@ -48,20 +48,19 @@ public class Interface extends javax.swing.JFrame {
     LinkedList<Pieza> piezas = new LinkedList<Pieza>();
     LinkedList<Nivel> niveles = new LinkedList<Nivel>();
     //Variables del juego
-    private int ROW = 100;
-    private int COL = 100;
-    private int puntos = 0;
-    private int juegoX;
-    private int juegoY;
+    private int ganar;
+    private int puntos = 100;
     private int posPiezas = 0;
     private int posNivel = 0;
     private int numNiveles = 0;
+    private boolean lose = false;
     //Area de juego
     JButton[][] juego;
+    int datosJuego[][];
     //Area para mover las piezas
     JButton[][] muestra;
     int datosMuestra[][];
-    int datosJuego[][];
+
     /*
      Pieza I = new Pieza("I");
      Pieza J = new Pieza("J");
@@ -81,14 +80,162 @@ public class Interface extends javax.swing.JFrame {
      T.llenar("1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0", "0,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0", "1,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0", "0,1,0,0,1,1,0,0,0,1,0,0,0,0,0,0");
      }
      */
+    private void bajarPieza() {
+        int inicio = 0;
+        for (int j = 0; j < 100; j++) {
+            //System.out.println("pieza");
+            //System.out.println(datosMuestra[0][j] + "," + datosMuestra[1][j] + "," + datosMuestra[2][j] + "," + datosMuestra[3][j]);
+            if (datosMuestra[0][j] != 0 || datosMuestra[1][j] != 0 || datosMuestra[2][j] != 0 || datosMuestra[3][j] != 0) {
+
+                inicio = j;
+                break;
+            }
+        }
+
+        System.out.println(piezas.get(posPiezas).getDir());
+        System.out.println(piezas.get(posPiezas).getPosicion());
+        System.out.println(piezas.get(posPiezas).getTipo());
+        System.out.println("La pieza incia: " + inicio);
+        //Recorrdo para saber donde esta lo mas alto del 
+        boolean encontro = false;
+        
+        int altura = 99;
+
+        for (int x = inicio; x < inicio + piezas.get(posPiezas).getX(); x++) {
+
+            String a = "";
+
+            for (int y = 0; y < niveles.get(posNivel).getX(); y++) {
+
+                a += datosJuego[y][x] + ",";
+                if (datosJuego[y][x] == 1) {
+                    if (altura > y) {
+                        altura = y;
+                        encontro = true;
+                        break;
+                    } else {
+                        encontro = true;
+                    }
+
+                }
+
+            }
+
+            System.out.println(a);
+            if (!encontro) {
+                altura = niveles.get(posNivel).getX() - 1;
+
+            } else {
+                //altura--; 
+            }
+
+        }
+        System.out.println("Altura:" + altura);
+
+        if (altura == 0) {
+            System.out.println("Juego perdido");
+            JOptionPane.showMessageDialog(null, "Juego perdido");
+            lose = true;
+
+        } else if (altura <= piezas.get(posPiezas).getY()){
+            //Si se pasa de la altura 
+
+            //Consigo la matriz de muestra segun el tamaño de la pieza 
+            /*
+            int pieza[][] = new int[piezas.get(posPiezas).getY()][piezas.get(posPiezas).getX()];
+            int ejeX = 0;
+            for (int y = 0; y < piezas.get(posPiezas).getY(); y++) {
+                ejeX = 0;
+                for (int x = inicio; x < inicio + piezas.get(posPiezas).getX(); x++) {
+                    pieza[y][ejeX] = datosMuestra[y][x];
+                    ejeX++;
+                }
+            }
+            */
+            System.out.println("");
+            //
+            boolean coloco = false;
+            String piezaJuego;
+            String piezaJ;
+
+            System.out.println("Pruebas colocacion");
+            for (int juegoY = niveles.get(posNivel).getX() - 1; juegoY >= piezas.get(posPiezas).getY() - 1; juegoY--) {
+                int juegoX = inicio;
+                int piezasColocadas = 0;
+                int temporal = juegoY;
+                piezaJuego = "";
+                piezaJ = "";
+                if (!coloco) {
+                    for (int i = piezas.get(posPiezas).getY() - 1; i >= 0; i--) {
+
+                        for (int j = 0; j < piezas.get(posPiezas).getX(); j++) {
+                            juegoX =inicio+ j;
+                            if (datosMuestra[i][juegoX] == 0) {
+                                //No debe hacer nada 
+                            } else if (datosMuestra[i][juegoX] == 1) {
+                                if (datosJuego[juegoY][juegoX] == 0) {
+                                    datosJuego[juegoY][juegoX] = 3;
+                                    piezasColocadas++;
+
+                                }
+                            }
+                            piezaJ += datosMuestra[j][juegoX] + ",";
+                            piezaJuego += datosJuego[juegoY][juegoX] + ",";
+
+                        }
+                        juegoY--;
+
+                    }
+                    System.out.println("Juego " + piezaJuego);
+                    System.out.println("Pieza " + piezaJ);
+                    System.out.println("Piezas colocadas " + piezasColocadas);
+                    
+                    juegoY = temporal;
+                    coloco = piezasColocadas == 4;
+                    colocarPieza(piezasColocadas == 4);
+
+                    
+
+                }
+
+            }
+
+            if (!coloco) {
+                JOptionPane.showMessageDialog(null, " Juego perdido");
+                lose = true;
+            }
+        }
+    }
+
+    public void colocarPieza(boolean colocar) {
+        if (colocar) {
+            //En donde se encuentren 3 pongo 1 
+            for (int i = 0; i < niveles.get(posNivel).getX(); i++) {
+                for (int j = 0; j < niveles.get(posNivel).getY(); j++) {
+                    if (datosJuego[i][j] == 3) {
+                        datosJuego[i][j] = 1;
+                    }
+                }
+            }
+        } else {
+            //En donde ayan 3 punto 0 
+            for (int i = 0; i < niveles.get(posNivel).getX(); i++) {
+                for (int j = 0; j < niveles.get(posNivel).getY(); j++) {
+                    if (datosJuego[i][j] == 3) {
+                        datosJuego[i][j] = 0;
+                    }
+                }
+            }
+        }
+    }
 
     private void setMatrizJuego() {
-        juego = new JButton[ROW][COL];
+        juego = new JButton[100][100];
         int x = 5;
         int y = 5;
 
-        for (int i = 0; i < ROW; i++) {
-            for (int j = 0; j < COL; j++) {
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 100; j++) {
                 juego[i][j] = new JButton();
                 //juego[i][j].setBackground(Color.lightGray);
                 //Pinto del color de fondo predeterminado
@@ -113,7 +260,7 @@ public class Interface extends javax.swing.JFrame {
     }
 
     private void comprobarJuego() {
-        int linea =0;
+        int linea = 0;
         //Reviso si alguna linea se lleno para suprimirla e ir bajando las lineas de arriba
         for (int i = niveles.get(posNivel).getX() - 1; i > 0; i--) {
             int casillas = 0;
@@ -126,7 +273,7 @@ public class Interface extends javax.swing.JFrame {
             }
             if (casillas == niveles.get(posNivel).getY()) {
                 //Elimino la linea i
-                linea ++;
+                linea++;
                 for (int j = i; j > 0; j--) {
                     for (int k = 0; k < niveles.get(posNivel).getY(); k++) {
                         datosJuego[j][k] = datosJuego[j - 1][k];
@@ -137,24 +284,23 @@ public class Interface extends javax.swing.JFrame {
                 }
             }
         }
-        if(linea ==1){
+        if (linea == 1) {
             puntos += 10;
-        }else if(linea == 2){
-            puntos +=15;
-        }else if(linea >= 3){
-            puntos +=20;
+        } else if (linea == 2) {
+            puntos += 15;
+        } else if (linea >= 3) {
+            puntos += 20;
         }
-            
 
     }
 
     private void setMatrizMuestra() {
-        muestra = new JButton[4][COL];
+        muestra = new JButton[4][100];
         int x = 5;
         int y = 5;
 
         for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < COL; j++) {
+            for (int j = 0; j < 100; j++) {
                 muestra[i][j] = new JButton();
                 muestra[i][j].setBackground(Color.decode("#CCFFCC"));
                 muestra[i][j].setBounds(y, x, 5, 5);
@@ -216,21 +362,18 @@ public class Interface extends javax.swing.JFrame {
 
     private void pasarNivel() {
         //Verifica si ya tiene 100 puntos y pasa de nivel    
-        if (puntos == 100 && posNivel + 1 == numNiveles) {
+        if (puntos == ganar && posNivel + 1 == numNiveles) {
             JOptionPane.showMessageDialog(null, "Juego completado");
-        } else if (puntos == 100) {
+        } else if (puntos == ganar) {
 
-            puntos = 100;
+            
             posNivel++;
             colocarNivel();
             pintarMuestra();
             pintarJuego();
-        } else {
-            calcularPts();
+        } else if (lose) {
+            JOptionPane.showMessageDialog(null, "Juego perdido");
         }
-    }
-
-    private void calcularPts() {
 
     }
 
@@ -257,6 +400,7 @@ public class Interface extends javax.swing.JFrame {
         jMenuItem8 = new javax.swing.JMenuItem();
         jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu8 = new javax.swing.JMenu();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -272,10 +416,8 @@ public class Interface extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         jPaneJuego = new javax.swing.JPanel();
         jpaneMuestra = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jButton6 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         btnTRS = new javax.swing.JMenuItem();
@@ -284,6 +426,7 @@ public class Interface extends javax.swing.JFrame {
         btnATRS = new javax.swing.JMenuItem();
         btnAPZS = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenuMe = new javax.swing.JMenuItem();
         jMenuManual = new javax.swing.JMenuItem();
@@ -307,6 +450,8 @@ public class Interface extends javax.swing.JFrame {
         jMenuItem9.setText("jMenuItem9");
 
         jMenuItem1.setText("jMenuItem1");
+
+        jMenu8.setText("jMenu8");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -384,23 +529,9 @@ public class Interface extends javax.swing.JFrame {
             .addGap(0, 40, Short.MAX_VALUE)
         );
 
-        jButton2.setText("pasar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         jLabel3.setText("Archivo TRS");
 
         jLabel4.setText("Archivo PZS");
-
-        jButton6.setText("debug");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -411,47 +542,39 @@ public class Interface extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPaneJuego, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jpaneMuestra, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                .addGap(18, 88, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 70, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addGap(150, 150, 150)))
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(28, 28, 28))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(lblNivel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel2)
-                                        .addGap(36, 36, 36)
-                                        .addComponent(lblPts, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)))
-                                .addGap(53, 53, 53)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE))
-                                .addGap(29, 29, 29)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
-                                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(33, 33, 33))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jButton6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(150, 150, 150)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(28, 28, 28))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblNivel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(36, 36, 36)
+                                .addComponent(lblPts, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)))
+                        .addGap(53, 53, 53)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE))
+                        .addGap(29, 29, 29)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(33, 33, 33))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -479,12 +602,8 @@ public class Interface extends javax.swing.JFrame {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
                             .addComponent(jScrollPane2)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jpaneMuestra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton2)))
+                        .addGap(15, 15, 15)
+                        .addComponent(jpaneMuestra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPaneJuego, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(22, Short.MAX_VALUE))
@@ -535,6 +654,14 @@ public class Interface extends javax.swing.JFrame {
             }
         });
         jMenu2.add(jMenuItem2);
+
+        jMenuItem3.setText("Configurar");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem3);
 
         jMenuBar1.add(jMenu2);
 
@@ -719,10 +846,14 @@ public class Interface extends javax.swing.JFrame {
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // Inicia el juego
         //Reinicio todo
+        
+        lose = false;
         posPiezas = 0;
         numNiveles = 0;
         posNivel = 0;
         puntos = 0;
+        
+        
         //Obtengo los datos de las piezas y coloco la pieza 1
         for (int i = 0; i < pzs.getTokens().size(); i++) {
             //Si es coma reviso en i-1 para saber la pieza e i+1 para saber la direccion de la pieza
@@ -757,55 +888,47 @@ public class Interface extends javax.swing.JFrame {
 
                     if (pzs.getTokens().get(i + 1).getToken() == 8) {//derecha
                         Pieza temp = new Pieza("J");
-                        temp.llenar("0,1,0,0,0,1,0,0,0,1,0,0,1,1,0,0", "1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0", "0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0", "1,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0");
+                        temp.llenar("0,1,0,0,0,1,0,0,1,1,0,0,0,0,0,0", "1,1,0,0,1,0,0,0,1,0,0,0,0,0,0,0", "1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0", "1,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0");
                         temp.setDir("derecha");
                         piezas.add(temp);
                     } else if (pzs.getTokens().get(i + 1).getToken() == 9) {//arriba
                         Pieza temp = new Pieza("J");
-                        temp.llenar("0,1,0,0,0,1,0,0,0,1,0,0,1,1,0,0", "1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0", "0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0", "1,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0");
+                        temp.llenar("0,1,0,0,0,1,0,0,1,1,0,0,0,0,0,0", "1,1,0,0,1,0,0,0,1,0,0,0,0,0,0,0", "1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0", "1,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0");
                         temp.setDir("arriba");
                         piezas.add(temp);
                     } else if (pzs.getTokens().get(i + 1).getToken() == 10) {//abajo
                         Pieza temp = new Pieza("J");
-                        temp.llenar("0,1,0,0,0,1,0,0,0,1,0,0,1,1,0,0", "1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0", "0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0", "1,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0");
+                        temp.llenar("0,1,0,0,0,1,0,0,1,1,0,0,0,0,0,0", "1,1,0,0,1,0,0,0,1,0,0,0,0,0,0,0", "1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0", "1,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0");
                         temp.setDir("abajo");
                         piezas.add(temp);
                     } else if (pzs.getTokens().get(i + 1).getToken() == 11) {//izquierda
                         Pieza temp = new Pieza("J");
-                        temp.llenar("0,1,0,0,0,1,0,0,0,1,0,0,1,1,0,0", "1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0", "0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0", "1,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0");
+                        temp.llenar("0,1,0,0,0,1,0,0,1,1,0,0,0,0,0,0", "1,1,0,0,1,0,0,0,1,0,0,0,0,0,0,0", "1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0", "1,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0");
                         temp.setDir("izquierda");
                         piezas.add(temp);
-                    } else {
-                        Pieza temp = new Pieza("J");
-                        temp.llenar("0,1,0,0,0,1,0,0,0,1,0,0,1,1,0,0", "1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0", "0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0", "1,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0");
-                        System.out.println("Jamas entra " + temp);
                     }
                 } else if (pzs.getTokens().get(i - 1).getToken() == 2) {//Pieza L
 
                     if (pzs.getTokens().get(i + 1).getToken() == 8) {//derecha
                         Pieza temp = new Pieza("L");
-                        temp.llenar("1,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0", "1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0", "1,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0", "1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0");
+                        temp.llenar("1,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0", "1,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0", "0,0,1,0,1,1,1,0,0,0,0,0,0,0,0,0", "1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0");
                         temp.setDir("derecha");
                         piezas.add(temp);
                     } else if (pzs.getTokens().get(i + 1).getToken() == 9) {//arriba
                         Pieza temp = new Pieza("L");
-                        temp.llenar("1,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0", "1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0", "1,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0", "1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0");
+                        temp.llenar("1,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0", "1,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0", "0,0,1,0,1,1,1,0,0,0,0,0,0,0,0,0", "1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0");
                         temp.setDir("arriba");
                         piezas.add(temp);
                     } else if (pzs.getTokens().get(i + 1).getToken() == 10) {//abajo
                         Pieza temp = new Pieza("L");
-                        temp.llenar("1,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0", "1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0", "1,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0", "1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0");
+                        temp.llenar("1,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0", "1,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0", "0,0,1,0,1,1,1,0,0,0,0,0,0,0,0,0", "1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0");
                         temp.setDir("abajo");
                         piezas.add(temp);
                     } else if (pzs.getTokens().get(i + 1).getToken() == 11) {//izquierda
                         Pieza temp = new Pieza("L");
-                        temp.llenar("1,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0", "1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0", "1,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0", "1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0");
+                        temp.llenar("1,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0", "1,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0", "0,0,1,0,1,1,1,0,0,0,0,0,0,0,0,0", "1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0");
                         temp.setDir("izquierda");
                         piezas.add(temp);
-                    } else {
-                        Pieza temp = new Pieza("L");
-                        temp.llenar("1,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0", "1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0", "1,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0", "1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0");
-                        System.out.println("Jamas entra " + temp);
                     }
                 } else if (pzs.getTokens().get(i - 1).getToken() == 3) {//PIEZA O
 
@@ -961,13 +1084,6 @@ public class Interface extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuManualActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-
-        puntos = 100;
-        pasarNivel();
-
-    }//GEN-LAST:event_jButton2ActionPerformed
-
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // MOVER A LA IZQUIERDA
         //Cambair limites con variables segun nivel
@@ -988,27 +1104,38 @@ public class Interface extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         //Indico ir a la pieza siguiente(BAJAR)
-        posPiezas++;
-        if (posPiezas == piezas.size()) {
-            posPiezas = 0;
-        }
+
         //Logica del juego (BAJAR PIEZA)
-
         //Coloca la siguiente pieza
-        datosMuestra = piezas.get(posPiezas).getPieza();
+        if (lose) {
+            JOptionPane.showMessageDialog(null, "Juego perdido");
+        } else {
 
-        comprobarJuego();
-        pintarMuestra();
-        pintarJuego();
-        pasarNivel();
-        lblNivel.setText(niveles.get(posNivel).getNombre());
-        lblPts.setText(String.valueOf(puntos));
+            comprobarJuego();
+
+            bajarPieza();
+            pintarJuego();
+            comprobarJuego();
+
+            pintarJuego();
+            pasarNivel();
+            lblNivel.setText(niveles.get(posNivel).getNombre());
+            lblPts.setText(String.valueOf(puntos));
+            posPiezas++;
+            if (posPiezas == piezas.size()) {
+                posPiezas = 0;
+            }
+            datosMuestra = piezas.get(posPiezas).getPieza();
+            pintarMuestra();
+        }
         //
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        System.out.println("DEBUG");
-    }//GEN-LAST:event_jButton6ActionPerformed
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        String pts= JOptionPane.showInputDialog("Ingrese puntos: ");
+        ganar = Integer.parseInt(pts);  
+        
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1073,11 +1200,9 @@ public class Interface extends javax.swing.JFrame {
     private javax.swing.JMenuItem btnPZS;
     private javax.swing.JMenuItem btnTRS;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -1090,11 +1215,13 @@ public class Interface extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenu jMenu7;
+    private javax.swing.JMenu jMenu8;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;

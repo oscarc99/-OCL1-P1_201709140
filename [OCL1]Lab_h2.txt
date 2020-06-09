@@ -1,6 +1,0 @@
-Stmt -> if E then Stmt Stmt' 
-      | otras
-
-Stmt' -> else Stmt
-       | ε
-       

@@ -17,6 +17,7 @@ public class Pieza {
     private int izquierda[][] = new int[4][100];
     private int derecha[][] = new int[4][100];
     private String dir;
+    private int cantidad;
     /*
      0 arriba
      1 abajo
@@ -174,5 +175,132 @@ public class Pieza {
         }
 
     }
+    
+    public int getX(){
+        if(tipo.equals("I") && posicion==0){
+            return 1;
+        }else if(tipo.equals("I") && posicion==1){
+            return 1;
+        }else if(tipo.equals("I") && posicion==2){
+            return 4;
+        }else if(tipo.equals("I") && posicion==3){
+            return 4;
+        }else if(tipo.equals("J") && posicion==0){
+            return 2;
+        }else if(tipo.equals("J") && posicion==1){
+            return 2;
+        }else if(tipo.equals("J") && posicion==2){
+            return 3;
+        }else if(tipo.equals("J") && posicion==3){
+            return 3;
+        }else if(tipo.equals("L") && posicion==0){
+            return 2;
+        }else if(tipo.equals("L") && posicion==1){
+            return 2;
+        }else if(tipo.equals("L") && posicion==2){
+            return 3;
+        }else if(tipo.equals("L") && posicion==3){
+            return 3;
+        }else if(tipo.equals("O") && posicion==0){
+            return 2;
+        }else if(tipo.equals("O") && posicion==1){
+            return 2;
+        }else if(tipo.equals("O") && posicion==2){
+            return 2;
+        }else if(tipo.equals("O") && posicion==3){
+            return 2;
+        }else if(tipo.equals("S") && posicion==0){
+            return 3;
+        }else if(tipo.equals("S") && posicion==1){
+            return 3;
+        }else if(tipo.equals("S") && posicion==2){
+            return 2;
+        }else if(tipo.equals("S") && posicion==3){
+            return 2;
+        }else if(tipo.equals("Z") && posicion==0){
+            return 3;
+        }else if(tipo.equals("Z") && posicion==1){
+            return 3;
+        }else if(tipo.equals("Z") && posicion==2){
+            return 2;
+        }else if(tipo.equals("Z") && posicion==3){
+            return 2;
+        }else if(tipo.equals("T") && posicion==0){
+            return 3;
+        }else if(tipo.equals("T") && posicion==1){
+            return 3;
+        }else if(tipo.equals("T") && posicion==2){
+            return 2;
+        }else if(tipo.equals("T") && posicion==3){
+            return 2;
+        }
+            return 4;
+        
+           
+    }
+    
+    public int getY(){
+        if(tipo.equals("I") && posicion==0){
+            return 4;
+        }else if(tipo.equals("I") && posicion==1){
+            return 4;
+        }else if(tipo.equals("I") && posicion==2){
+            return 1;
+        }else if(tipo.equals("I") && posicion==3){
+            return 1;
+        }else if(tipo.equals("J") && posicion==0){
+            return 3;
+        }else if(tipo.equals("J") && posicion==1){
+            return 3;
+        }else if(tipo.equals("J") && posicion==2){
+            return 2;
+        }else if(tipo.equals("J") && posicion==3){
+            return 2;
+        }else if(tipo.equals("L") && posicion==0){
+            return 3;
+        }else if(tipo.equals("L") && posicion==1){
+            return 3;
+        }else if(tipo.equals("L") && posicion==2){
+            return 2;
+        }else if(tipo.equals("L") && posicion==3){
+            return 2;
+        }else if(tipo.equals("O") && posicion==0){
+            return 2;
+        }else if(tipo.equals("O") && posicion==1){
+            return 2;
+        }else if(tipo.equals("O") && posicion==2){
+            return 2;
+        }else if(tipo.equals("O") && posicion==3){
+            return 2;
+        }else if(tipo.equals("S") && posicion==0){
+            return 2;
+        }else if(tipo.equals("S") && posicion==1){
+            return 2;
+        }else if(tipo.equals("S") && posicion==2){
+            return 3;
+        }else if(tipo.equals("S") && posicion==3){
+            return 3;
+        }else if(tipo.equals("Z") && posicion==0){
+            return 2;
+        }else if(tipo.equals("Z") && posicion==1){
+            return 2;
+        }else if(tipo.equals("Z") && posicion==2){
+            return 3;
+        }else if(tipo.equals("Z") && posicion==3){
+            return 3;
+        }else if(tipo.equals("T") && posicion==0){
+            return 2;
+        }else if(tipo.equals("T") && posicion==1){
+            return 2;
+        }else if(tipo.equals("T") && posicion==2){
+            return 3;
+        }else if(tipo.equals("T") && posicion==3){
+            return 3;
+        }
+            return 4;
+        
+    }
+    
+    
 
 }
