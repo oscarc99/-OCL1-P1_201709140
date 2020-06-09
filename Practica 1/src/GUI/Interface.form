@@ -232,7 +232,7 @@
                       <Component id="jPaneJuego" max="32767" attributes="0"/>
                       <Component id="jpaneMuestra" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" pref="88" max="32767" attributes="0"/>
+                  <EmptySpace type="separate" pref="70" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
