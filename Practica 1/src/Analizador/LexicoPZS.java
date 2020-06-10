@@ -6,18 +6,13 @@
 package Analizador;
 
 import Objects.*;
-import com.itextpdf.text.pdf.PdfDocument;
-import com.itextpdf.text.pdf.PdfWriter;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
-import com.itextpdf.kernel.geom.PageSize;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 
@@ -311,53 +306,8 @@ public class LexicoPZS {
         }
     }
 
-    public void reportTokenPZS() throws IOException {
-        com.itextpdf.kernel.pdf.PdfWriter writer = new com.itextpdf.kernel.pdf.PdfWriter("reportes\\TokensPZS.pdf");
-        com.itextpdf.kernel.pdf.PdfDocument pdf = new com.itextpdf.kernel.pdf.PdfDocument(writer);
-        Document document = new Document(pdf);
-        document.add(new Paragraph("Tabla Tokens"));
-        Table tabla = new Table(new float[]{4, 4, 4});
-        tabla.setWidth(600);
-        tabla.addHeaderCell(new Cell().add(new Paragraph("Token")));
-        tabla.addHeaderCell(new Cell().add(new Paragraph("Lexema")));
-        tabla.addHeaderCell(new Cell().add(new Paragraph("Fila")));
-        tabla.addHeaderCell(new Cell().add(new Paragraph("Columna")));
+   
 
-        for (int i = 0; i < tokens.size(); i++) {
-            tabla.addCell(new Cell().add(new Paragraph(Integer.toString(tokens.get(i).getToken()))));
-            tabla.addCell(new Cell().add(new Paragraph(tokens.get(i).getLexema())));
-            tabla.addCell(new Cell().add(new Paragraph(Integer.toString(tokens.get(i).getRow()))));
-            tabla.addCell(new Cell().add(new Paragraph(Integer.toString(tokens.get(i).getColumn()))));
 
-        }
-        document.add(tabla);
-        document.close();
-
-    }
-
-    public void reportErroresPZS() throws IOException {
-
-        com.itextpdf.kernel.pdf.PdfWriter writer = new com.itextpdf.kernel.pdf.PdfWriter("reportes\\ErroresPZS.pdf");
-        com.itextpdf.kernel.pdf.PdfDocument pdf = new com.itextpdf.kernel.pdf.PdfDocument(writer);
-        Document document = new Document(pdf, PageSize.A4);
-        document.add(new Paragraph("Tabla Errores"));
-        Table tabla = new Table(new float[]{4, 4});
-        tabla.setWidth(100);
-        tabla.addHeaderCell(new Cell().add(new Paragraph("No.")));
-        tabla.addHeaderCell(new Cell().add(new Paragraph("Error")));
-        tabla.addHeaderCell(new Cell().add(new Paragraph("Fila")));
-        tabla.addHeaderCell(new Cell().add(new Paragraph("Columna")));
-
-        for (int i = 0; i < Errors.size(); i++) {
-            tabla.addCell(new Cell().add(new Paragraph(Integer.toString(i + 1))));
-            tabla.addCell(new Cell().add(new Paragraph(Errors.get(i).getError())));
-            tabla.addCell(new Cell().add(new Paragraph(Integer.toString(Errors.get(i).getRow()))));
-            tabla.addCell(new Cell().add(new Paragraph(Integer.toString(Errors.get(i).getColumn()))));
-        }
-        document.add(tabla);
-
-        document.close();
-
-    }
 
 }
