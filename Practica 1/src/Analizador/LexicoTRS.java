@@ -62,13 +62,13 @@ public class LexicoTRS {
                 case 0:
                     // Estado 0 del automata
                     if (chars[i] == '#') {
-                        tokens.add(new Token(0, "#", row, column));
+                        tokens.add(new Token(0, "#", row, column,"Caracter especial #"));
                         row++;
                     } else if (chars[i] == '*') {
-                        tokens.add(new Token(1, "*", row, column));
+                        tokens.add(new Token(1, "*", row, column,"Caracter especial *"));
                         row++;
                     } else if (chars[i] == '-') {
-                        tokens.add(new Token(4, "-", row, column));
+                        tokens.add(new Token(4, "-", row, column,"Caracter especial -"));
                         aux = "";
 
                     } else if (Character.isLetter(chars[i])) {
@@ -124,7 +124,7 @@ public class LexicoTRS {
                         state = 0;
                         column++;
                         row = 0;
-                        tokens.add(new Token(5, aux, row, column));
+                        tokens.add(new Token(5, aux, row, column,"Comentario unilinea"));
                         aux="";
                     }else{
                         aux += Character.toString(chars[i]);
@@ -137,7 +137,8 @@ public class LexicoTRS {
                         row++;
                         aux += Character.toString(chars[i]);
                     } else {
-                        tokens.add(new Token(9, "<", row, column));
+                        
+                        Errors.add(new Erro("Error lexico", row, column, "<"));
                         aux="";
                         row++;
                         i--;
@@ -164,7 +165,7 @@ public class LexicoTRS {
                         state = 0;
                         row++;
                         aux += Character.toString(chars[i]);
-                        tokens.add(new Token(5, aux, row, column));
+                        tokens.add(new Token(5, aux, row, column,"Comentario multilinea"));
                         aux="";
 
                     } else {
@@ -178,7 +179,7 @@ public class LexicoTRS {
                         aux += String.valueOf(chars[i]);
                         row++;
                     } else {
-                        tokens.add(new Token(3, aux, row, column));
+                        tokens.add(new Token(3, aux, row, column,"Identificador"));
                         aux = "";
                         state = 0;
                         i--;
@@ -189,7 +190,7 @@ public class LexicoTRS {
                         aux += String.valueOf(chars[i]);
                         row++;
                     } else {
-                        tokens.add(new Token(2, aux, row, column));
+                        tokens.add(new Token(2, aux, row, column, "Numero"));
                         aux = "";
                         state = 0;
                         i--;
@@ -233,6 +234,7 @@ public void htmlError() {
                     + "            <tr>\n"
                     
                     + "              <td>No.</td>\n"
+                    + "              <td>Tipo</td>\n"
                     + "              <td>Error</td>\n"
                     + "              <td>Fila</td>\n"
                     + "              <td>Columna</td>\n"
@@ -242,6 +244,9 @@ public void htmlError() {
                 contenido += "<tr> \n";
                 contenido += "<td>\n";
                 contenido += Integer.toString(i+1);
+                contenido += "</td>\n";
+                contenido += "<td>\n";
+                contenido += Errors.get(i).getType();
                 contenido += "</td>\n";
                 contenido += "<td>\n";
                 contenido += Errors.get(i).getError();
@@ -274,6 +279,7 @@ public void htmlError() {
             contenido += "        <table class=\"egt\" border=\"1\">\n"
                     + "            <tr>\n"
                     + "              <td>Token</td>\n"
+                    + "              <td>Tipo</td>\n"
                     + "              <td>Lexema</td>\n"
                     + "              <td>Fila</td>\n"
                     + "              <td>Columna</td>\n"
@@ -283,6 +289,9 @@ public void htmlError() {
                 contenido += "<tr> \n";
                 contenido += "<td>\n";
                 contenido += Integer.toString(tokens.get(i).getToken());
+                contenido += "</td>\n";
+                contenido += "<td>\n";
+                contenido += tokens.get(i).getTipo();
                 contenido += "</td>\n";
                 contenido += "<td>\n";
                 contenido += tokens.get(i).getLexema();

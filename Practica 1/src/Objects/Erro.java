@@ -25,6 +25,8 @@ public class Erro {
         this.error=error;
         
     }
+    
+    
 
     public String getError() {
         return error;

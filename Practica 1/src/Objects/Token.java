@@ -12,6 +12,7 @@ package Objects;
 public class Token {
     private int token;
     private String lexema;
+    private String tipo;
     private int row;
     private int column;
     
@@ -19,13 +20,18 @@ public class Token {
     public Token() {
     }
 
-    public Token(int token, String lexema, int row, int column) {
+    public Token(int token, String lexema, int row, int column, String tipo) {
         this.token = token;
         this.lexema = lexema;
         this.row = row;
         this.column = column;
+        this.tipo = tipo;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+    
     public int getToken() {
         return token;
     }

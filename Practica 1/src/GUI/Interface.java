@@ -137,7 +137,7 @@ public class Interface extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Juego perdido");
             lose = true;
 
-        } else if (altura <= piezas.get(posPiezas).getY()){
+        } else if (altura <= niveles.get(posNivel).getX() - 1 && altura >= niveles.get(posNivel).getX() - piezas.get(posPiezas).getY()){
             //Si se pasa de la altura 
 
             //Consigo la matriz de muestra segun el tamaño de la pieza 
@@ -171,7 +171,10 @@ public class Interface extends javax.swing.JFrame {
                         for (int j = 0; j < piezas.get(posPiezas).getX(); j++) {
                             juegoX =inicio+ j;
                             if (datosMuestra[i][juegoX] == 0) {
-                                //No debe hacer nada 
+                                if (datosJuego[juegoY][juegoX] == 1) {
+                                    if(piezasColocadas>4)piezasColocadas++;
+
+                                }
                             } else if (datosMuestra[i][juegoX] == 1) {
                                 if (datosJuego[juegoY][juegoX] == 0) {
                                     datosJuego[juegoY][juegoX] = 3;
@@ -204,6 +207,79 @@ public class Interface extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, " Juego perdido");
                 lose = true;
             }
+        } else if (altura <= niveles.get(posNivel).getX() - piezas.get(posPiezas).getY() && altura >= piezas.get(posPiezas).getY()-1){
+            //Si se pasa de la altura 
+
+            //Consigo la matriz de muestra segun el tamaño de la pieza 
+            /*
+            int pieza[][] = new int[piezas.get(posPiezas).getY()][piezas.get(posPiezas).getX()];
+            int ejeX = 0;
+            for (int y = 0; y < piezas.get(posPiezas).getY(); y++) {
+                ejeX = 0;
+                for (int x = inicio; x < inicio + piezas.get(posPiezas).getX(); x++) {
+                    pieza[y][ejeX] = datosMuestra[y][x];
+                    ejeX++;
+                }
+            }
+            */
+            System.out.println("");
+            //
+            boolean coloco = false;
+            String piezaJuego;
+            String piezaJ;
+
+            System.out.println("Pruebas colocacion");
+            for (int juegoY = altura; juegoY >= piezas.get(posPiezas).getY() - 1; juegoY--) {
+                int juegoX = inicio;
+                int piezasColocadas = 0;
+                int temporal = juegoY;
+                piezaJuego = "";
+                piezaJ = "";
+                if (!coloco) {
+                    for (int i = piezas.get(posPiezas).getY() - 1; i >= 0; i--) {
+
+                        for (int j = 0; j < piezas.get(posPiezas).getX(); j++) {
+                            juegoX =inicio+ j;
+                            if (datosMuestra[i][juegoX] == 0) {
+                                if (datosJuego[juegoY][juegoX] == 1) {
+                                    if(piezasColocadas>4)piezasColocadas++;
+
+                                }
+                            } else if (datosMuestra[i][juegoX] == 1) {
+                                if (datosJuego[juegoY][juegoX] == 0) {
+                                    datosJuego[juegoY][juegoX] = 3;
+                                    piezasColocadas++;
+
+                                }
+                            }
+                            piezaJ += datosMuestra[j][juegoX] + ",";
+                            piezaJuego += datosJuego[juegoY][juegoX] + ",";
+
+                        }
+                        juegoY--;
+
+                    }
+                    System.out.println("Juego " + piezaJuego);
+                    System.out.println("Pieza " + piezaJ);
+                    System.out.println("Piezas colocadas " + piezasColocadas);
+                    
+                    juegoY = temporal;
+                    coloco = piezasColocadas == 4;
+                    colocarPieza(piezasColocadas == 4);
+
+                    
+
+                }
+
+            }
+
+            if (!coloco) {
+                JOptionPane.showMessageDialog(null, " Juego perdido");
+                lose = true;
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, " Juego perdido");
+                lose = true;
         }
     }
 
@@ -371,6 +447,7 @@ public class Interface extends javax.swing.JFrame {
             colocarNivel();
             pintarMuestra();
             pintarJuego();
+            puntos=0;
         } else if (lose) {
             JOptionPane.showMessageDialog(null, "Juego perdido");
         }
@@ -1127,6 +1204,7 @@ public class Interface extends javax.swing.JFrame {
             }
             datosMuestra = piezas.get(posPiezas).getPieza();
             pintarMuestra();
+            
         }
         //
     }//GEN-LAST:event_jButton5ActionPerformed

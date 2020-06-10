@@ -63,48 +63,48 @@ public class LexicoPZS {
                 case 0:
                     // Estado 0 del automata
                     if (chars[i] == 'I') {
-                        tokens.add(new Token(0, "I", row, column));
+                        tokens.add(new Token(0, "I", row, column,"Pieza I"));
                         row++;
                     } else if (chars[i] == 'J') {
-                        tokens.add(new Token(1, "J", row, column));
+                        tokens.add(new Token(1, "J", row, column,"Pieza J"));
                         row++;
                     } else if (chars[i] == 'L') {
-                        tokens.add(new Token(2, "L", row, column));
+                        tokens.add(new Token(2, "L", row, column,"Pieza L"));
                         row++;
                     } else if (chars[i] == 'O') {
-                        tokens.add(new Token(3, "O", row, column));
+                        tokens.add(new Token(3, "O", row, column,"Pieza O"));
                         row++;
                     } else if (chars[i] == 'S') {
-                        tokens.add(new Token(4, "S", row, column));
+                        tokens.add(new Token(4, "S", row, column,"Pieza S"));
                         row++;
                     } else if (chars[i] == 'Z') {
-                        tokens.add(new Token(5, "Z", row, column));
+                        tokens.add(new Token(5, "Z", row, column,"Pieza Z"));
                         row++;
                     } else if (chars[i] == 'T') {
-                        tokens.add(new Token(6, "T", row, column));
+                        tokens.add(new Token(6, "T", row, column,"Pieza T"));
                         row++;
                     } else if (chars[i] == ',') {
-                        tokens.add(new Token(7, ",", row, column));
+                        tokens.add(new Token(7, ",", row, column,"Signo especial ,"));
                         row++;
                     } else if (chars[i] == '>') {
-                        tokens.add(new Token(8, ">", row, column));
+                        tokens.add(new Token(8, ">", row, column,"Posicion derecha"));
                         row++;
                     } else if (chars[i] == '^') {
-                        tokens.add(new Token(9, "^", row, column));
+                        tokens.add(new Token(9, "^", row, column,"Posicion arriba"));
                         row++;
                     } else if (chars[i] == 'v') {
-                        tokens.add(new Token(10, "v", row, column));
+                        tokens.add(new Token(10, "v", row, column,"Posicion abajo"));
                         row++;
                     } else if (chars[i] == '<') {
                         if (i == chars.length) {
-                            tokens.add(new Token(11, "<", row, column));
+                            tokens.add(new Token(11, "<", row, column,"Posicion izquierda"));
                             
                         } else if (chars[i + 1] == '!') {
                             state = 3;
                             aux += String.valueOf(chars[i]);
                             row++;
                         } else {
-                            tokens.add(new Token(11, "<", row, column));
+                            tokens.add(new Token(11, "<", row, column,"Posicion izquierda"));
                             row++;
                         }
 
@@ -143,7 +143,7 @@ public class LexicoPZS {
                         state = 0;
                         column++;
                         row = 0;
-                        tokens.add(new Token(12, aux, row, column));
+                        tokens.add(new Token(12, aux, row, column,"Comentario unulinea"));
                         aux = "";
 
                     } else {
@@ -158,7 +158,7 @@ public class LexicoPZS {
                         state = 4;
                         row++;
                     } else {
-                        tokens.add(new Token(9, "<", row, column));
+                        tokens.add(new Token(11, "<", row, column,"Posicion izquierda"));
                         row++;
                         aux = "";
 
@@ -185,7 +185,7 @@ public class LexicoPZS {
                         state = 0;
                         row++;
                         aux += String.valueOf(chars[i]);
-                        tokens.add(new Token(13, aux, row, column));
+                        tokens.add(new Token(13, aux, row, column,"Comentario multilinea"));
                         aux = "";
 
                     } else {
@@ -230,6 +230,7 @@ public class LexicoPZS {
             contenido += "        <table class=\"egt\" border=\"1\">\n"
                     + "            <tr>\n"
                     + "              <td>No.</td>\n"
+                    + "              <td>Tipo</td>\n"
                     + "              <td>Error</td>\n"
                     + "              <td>Fila</td>\n"
                     + "              <td>Columna</td>\n"
@@ -239,6 +240,9 @@ public class LexicoPZS {
                 contenido += "<tr> \n";
                 contenido += "<td>\n";
                 contenido += Integer.toString(i+1);
+                contenido += "</td>\n";
+                contenido += "<td>\n";
+                contenido += Errors.get(i).getType();
                 contenido += "</td>\n";
                 contenido += "<td>\n";
                 contenido += Errors.get(i).getError();
@@ -271,6 +275,7 @@ public class LexicoPZS {
             contenido += "        <table class=\"egt\" border=\"1\">\n"
                     + "            <tr>\n"
                     + "              <td>Token</td>\n"
+                    + "              <td>Tipo</td>\n"
                     + "              <td>Lexema</td>\n"
                     + "              <td>Fila</td>\n"
                     + "              <td>Columna</td>\n"
@@ -280,6 +285,9 @@ public class LexicoPZS {
                 contenido += "<tr> \n";
                 contenido += "<td>\n";
                 contenido += Integer.toString(tokens.get(i).getToken());
+                contenido += "</td>\n";
+                contenido += "<td>\n";
+                contenido += tokens.get(i).getTipo();
                 contenido += "</td>\n";
                 contenido += "<td>\n";
                 contenido += tokens.get(i).getLexema();
