@@ -227,7 +227,7 @@ public class LexicoTRS {
     
 public void htmlError() {
         try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\loosc\\OneDrive\\Escritorio\\Practica1\\ErrorTRS.html"));
+            BufferedWriter bw = new BufferedWriter(new FileWriter("reportes\\ErrorTRS.html"));
             String contenido = "";
             contenido += "<html><head><title>ERRORES PZS</title></head><body> \n";
             contenido += "        <table class=\"egt\" border=\"1\">\n"
@@ -273,7 +273,7 @@ public void htmlError() {
 
     public void htmlToken() {
         try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\Users\\loosc\\OneDrive\\Escritorio\\Practica1\\TokensTRS.html"));
+            BufferedWriter bw = new BufferedWriter(new FileWriter("reportes\\TokensTRS.html"));
             String contenido = "";
             contenido += "<html><head><title>Tokens TRS</title></head><body> \n";
             contenido += "        <table class=\"egt\" border=\"1\">\n"
@@ -316,7 +316,7 @@ public void htmlError() {
     }
     
     public void reportTokenTRS() throws IOException {
-        com.itextpdf.kernel.pdf.PdfWriter writer = new com.itextpdf.kernel.pdf.PdfWriter("C:\\Users\\loosc\\OneDrive\\Escritorio\\TokensTRS.pdf");
+        com.itextpdf.kernel.pdf.PdfWriter writer = new com.itextpdf.kernel.pdf.PdfWriter("reportes\\TokensTRS.pdf");
         com.itextpdf.kernel.pdf.PdfDocument pdf = new com.itextpdf.kernel.pdf.PdfDocument(writer);
         Document document = new Document(pdf);
         document.add(new Paragraph("Tabla Tokens"));
@@ -342,7 +342,7 @@ public void htmlError() {
   
   public void reportErroresTRS() throws IOException {
         
-        com.itextpdf.kernel.pdf.PdfWriter writer = new com.itextpdf.kernel.pdf.PdfWriter("C:\\Users\\loosc\\OneDrive\\Escritorio\\ErroresTRS.pdf");
+        com.itextpdf.kernel.pdf.PdfWriter writer = new com.itextpdf.kernel.pdf.PdfWriter("reportes\\ErroresTRS.pdf");
         com.itextpdf.kernel.pdf.PdfDocument pdf = new com.itextpdf.kernel.pdf.PdfDocument(writer);
         Document document = new Document(pdf, PageSize.A4);
         document.add(new Paragraph("Tabla Errores"));

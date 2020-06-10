@@ -7,6 +7,7 @@ package practica.pkg1;
 
 import Analizador.*;
 import GUI.Interface;
+import java.io.File;
 
 /**
  *
@@ -19,16 +20,19 @@ public class Practica1 {
      */
     public static void main(String[] args) {
         /*
-        LexicoTRS trs = new LexicoTRS();
-        trs.scannerPZS("C:\\Users\\loosc\\OneDrive\\Escritorio\\USAC\\VJUN2020\\Compi1\\[OCL1]P1_201709140\\Pruebas\\pruebaTRS.txt");
-        System.out.println(trs);
-        System.out.println("a");
-        */
+         LexicoTRS trs = new LexicoTRS();
+         trs.scannerPZS("C:\\Users\\loosc\\OneDrive\\Escritorio\\USAC\\VJUN2020\\Compi1\\[OCL1]P1_201709140\\Pruebas\\pruebaTRS.txt");
+         System.out.println(trs);
+         System.out.println("a");
+         */
+                String crear = "reportes\\";
+
+        File ca = new File(crear);
+        ca.mkdirs();
         Interface v = new Interface();
-        v.setVisible(true); 
-                
-        
-        
+        v.setVisible(true);
+
+
     }
-    
+
 }
