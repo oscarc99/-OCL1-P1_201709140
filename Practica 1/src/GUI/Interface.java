@@ -80,6 +80,12 @@ public class Interface extends javax.swing.JFrame {
      T.llenar("1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0", "0,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0", "1,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0", "0,1,0,0,1,1,0,0,0,1,0,0,0,0,0,0");
      }
      */
+    
+    private void jugar(){
+        
+    }
+    
+    
     private void bajarPieza() {
         int inicio = 0;
         for (int j = 0; j < 100; j++) {
@@ -98,7 +104,7 @@ public class Interface extends javax.swing.JFrame {
         System.out.println("La pieza incia: " + inicio);
         //Recorrdo para saber donde esta lo mas alto del 
         boolean encontro = false;
-        
+
         int altura = 99;
 
         for (int x = inicio; x < inicio + piezas.get(posPiezas).getX(); x++) {
@@ -137,21 +143,21 @@ public class Interface extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Juego perdido");
             lose = true;
 
-        } else if (altura <= niveles.get(posNivel).getX() - 1 && altura >= niveles.get(posNivel).getX() - piezas.get(posPiezas).getY()){
+        } else if (altura <= niveles.get(posNivel).getX() - 1 && altura >= niveles.get(posNivel).getX() - piezas.get(posPiezas).getY()) {
             //Si se pasa de la altura 
 
             //Consigo la matriz de muestra segun el tamaño de la pieza 
             /*
-            int pieza[][] = new int[piezas.get(posPiezas).getY()][piezas.get(posPiezas).getX()];
-            int ejeX = 0;
-            for (int y = 0; y < piezas.get(posPiezas).getY(); y++) {
-                ejeX = 0;
-                for (int x = inicio; x < inicio + piezas.get(posPiezas).getX(); x++) {
-                    pieza[y][ejeX] = datosMuestra[y][x];
-                    ejeX++;
-                }
-            }
-            */
+             int pieza[][] = new int[piezas.get(posPiezas).getY()][piezas.get(posPiezas).getX()];
+             int ejeX = 0;
+             for (int y = 0; y < piezas.get(posPiezas).getY(); y++) {
+             ejeX = 0;
+             for (int x = inicio; x < inicio + piezas.get(posPiezas).getX(); x++) {
+             pieza[y][ejeX] = datosMuestra[y][x];
+             ejeX++;
+             }
+             }
+             */
             System.out.println("");
             //
             boolean coloco = false;
@@ -160,7 +166,7 @@ public class Interface extends javax.swing.JFrame {
 
             System.out.println("Pruebas colocacion");
             for (int juegoY = niveles.get(posNivel).getX() - 1; juegoY >= piezas.get(posPiezas).getY() - 1; juegoY--) {
-                int juegoX = inicio;
+                int juegoX;
                 int piezasColocadas = 0;
                 int temporal = juegoY;
                 piezaJuego = "";
@@ -169,10 +175,12 @@ public class Interface extends javax.swing.JFrame {
                     for (int i = piezas.get(posPiezas).getY() - 1; i >= 0; i--) {
 
                         for (int j = 0; j < piezas.get(posPiezas).getX(); j++) {
-                            juegoX =inicio+ j;
+                            juegoX = inicio + j;
                             if (datosMuestra[i][juegoX] == 0) {
                                 if (datosJuego[juegoY][juegoX] == 1) {
-                                    if(piezasColocadas>4)piezasColocadas++;
+                                    if (piezasColocadas > 4) {
+                                        piezasColocadas++;
+                                    }
 
                                 }
                             } else if (datosMuestra[i][juegoX] == 1) {
@@ -192,12 +200,10 @@ public class Interface extends javax.swing.JFrame {
                     System.out.println("Juego " + piezaJuego);
                     System.out.println("Pieza " + piezaJ);
                     System.out.println("Piezas colocadas " + piezasColocadas);
-                    
+
                     juegoY = temporal;
                     coloco = piezasColocadas == 4;
                     colocarPieza(piezasColocadas == 4);
-
-                    
 
                 }
 
@@ -207,21 +213,21 @@ public class Interface extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, " Juego perdido");
                 lose = true;
             }
-        } else if (altura <= niveles.get(posNivel).getX() - piezas.get(posPiezas).getY() && altura >= piezas.get(posPiezas).getY()-1){
+        } else if (altura <= niveles.get(posNivel).getX() - piezas.get(posPiezas).getY() && altura >= piezas.get(posPiezas).getY() - 1) {
             //Si se pasa de la altura 
 
             //Consigo la matriz de muestra segun el tamaño de la pieza 
             /*
-            int pieza[][] = new int[piezas.get(posPiezas).getY()][piezas.get(posPiezas).getX()];
-            int ejeX = 0;
-            for (int y = 0; y < piezas.get(posPiezas).getY(); y++) {
-                ejeX = 0;
-                for (int x = inicio; x < inicio + piezas.get(posPiezas).getX(); x++) {
-                    pieza[y][ejeX] = datosMuestra[y][x];
-                    ejeX++;
-                }
-            }
-            */
+             int pieza[][] = new int[piezas.get(posPiezas).getY()][piezas.get(posPiezas).getX()];
+             int ejeX = 0;
+             for (int y = 0; y < piezas.get(posPiezas).getY(); y++) {
+             ejeX = 0;
+             for (int x = inicio; x < inicio + piezas.get(posPiezas).getX(); x++) {
+             pieza[y][ejeX] = datosMuestra[y][x];
+             ejeX++;
+             }
+             }
+             */
             System.out.println("");
             //
             boolean coloco = false;
@@ -239,10 +245,12 @@ public class Interface extends javax.swing.JFrame {
                     for (int i = piezas.get(posPiezas).getY() - 1; i >= 0; i--) {
 
                         for (int j = 0; j < piezas.get(posPiezas).getX(); j++) {
-                            juegoX =inicio+ j;
+                            juegoX = inicio + j;
                             if (datosMuestra[i][juegoX] == 0) {
                                 if (datosJuego[juegoY][juegoX] == 1) {
-                                    if(piezasColocadas>4)piezasColocadas++;
+                                    if (piezasColocadas > 4) {
+                                        piezasColocadas++;
+                                    }
 
                                 }
                             } else if (datosMuestra[i][juegoX] == 1) {
@@ -262,12 +270,10 @@ public class Interface extends javax.swing.JFrame {
                     System.out.println("Juego " + piezaJuego);
                     System.out.println("Pieza " + piezaJ);
                     System.out.println("Piezas colocadas " + piezasColocadas);
-                    
+
                     juegoY = temporal;
                     coloco = piezasColocadas == 4;
                     colocarPieza(piezasColocadas == 4);
-
-                    
 
                 }
 
@@ -277,9 +283,9 @@ public class Interface extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, " Juego perdido");
                 lose = true;
             }
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, " Juego perdido");
-                lose = true;
+            lose = true;
         }
     }
 
@@ -442,12 +448,11 @@ public class Interface extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Juego completado");
         } else if (puntos == ganar) {
 
-            
             posNivel++;
             colocarNivel();
             pintarMuestra();
             pintarJuego();
-            puntos=0;
+            puntos = 0;
         } else if (lose) {
             JOptionPane.showMessageDialog(null, "Juego perdido");
         }
@@ -923,14 +928,13 @@ public class Interface extends javax.swing.JFrame {
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // Inicia el juego
         //Reinicio todo
-        
+
         lose = false;
         posPiezas = 0;
         numNiveles = 0;
         posNivel = 0;
         puntos = 0;
-        
-        
+
         //Obtengo los datos de las piezas y coloco la pieza 1
         for (int i = 0; i < pzs.getTokens().size(); i++) {
             //Si es coma reviso en i-1 para saber la pieza e i+1 para saber la direccion de la pieza
@@ -1158,7 +1162,12 @@ public class Interface extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuManualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuManualActionPerformed
-        // TODO add your handling code here:
+        try {
+            File path = new File("C:\\Users\\loosc\\OneDrive\\Escritorio\\Practica1\\MANUAL_DE_USUARIO.pdf");
+            Desktop.getDesktop().open(path);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }//GEN-LAST:event_jMenuManualActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -1204,15 +1213,15 @@ public class Interface extends javax.swing.JFrame {
             }
             datosMuestra = piezas.get(posPiezas).getPieza();
             pintarMuestra();
-            
+
         }
         //
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        String pts= JOptionPane.showInputDialog("Ingrese puntos: ");
-        ganar = Integer.parseInt(pts);  
-        
+        String pts = JOptionPane.showInputDialog("Ingrese puntos: ");
+        ganar = Integer.parseInt(pts);
+
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
